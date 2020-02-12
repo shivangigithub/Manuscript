@@ -1,0 +1,104 @@
+amber  on
+parmfile    complex-box.prmtop
+ambercoor   complex-box.inpcrd
+temperature     0
+
+outputEnergies  500
+outputTiming    500
+outputPressure  500
+
+dcdFreq         500
+wrapAll         on
+wrapWater    on
+wrapNearest     on
+
+rigidBonds      all
+timestep        2
+nonBondedFreq   1
+fullElectFrequency 2
+stepsPerCycle   20
+
+switching       off
+cutoff          9
+pairlistdist    11
+
+cellBasisVector1    74.667   000.000  000.000  
+cellBasisVector2    000.000  79.692   000.000
+cellBasisVector3   000.000   000.000   79.350
+cellOrigin     38.663333892822266 41.45700454711914 41.15462112426758
+
+# the margin could be reduced once the cell is equilibrated
+margin 5
+
+Pme             on
+PmeGridsizeX    80
+PmeGridsizeY    85
+PmeGridsizeZ    85
+
+exclude         scaled1-4
+1-4scaling      0.833
+
+fixedAtoms              on
+fixedAtomsForces        on
+fixedAtomsFile          fix_backbone.pdb
+fixedAtomsCol           B
+
+constraints     on
+consRef         restrain_ca.pdb
+consKFile       restrain_ca.pdb
+consKCol        B
+
+langevin                on
+langevinDamping         10
+langevinTemp            310
+langevinHydrogen        no
+
+langevinPiston          on
+langevinPistonTarget    1.01325
+langevinPistonPeriod    200
+langevinPistonDecay     100
+langevinPistonTemp      310
+
+useGroupPressure        yes     # smaller fluctuations
+useFlexibleCell         no     # allow dimensions to fluctuate independently
+useConstantRatio        no     # fix shape in x-y plane
+
+binaryoutput    off
+outputname      prot_eq
+
+# run one step to get into scripting mode
+minimize 0
+
+# turn off until later
+langevinPiston  off
+
+# minimize nonbackbone atoms
+minimize 40000
+output min_fix
+
+# min all atoms
+fixedAtoms      off
+minimize 40000
+output min_all
+
+set temperature 10
+#gradually heating
+for {set i 10} {$i <= 310} {incr i 30} {
+langevinTemp $i
+run 10000
+output heat_$i
+}
+
+# heat with CAs restrained
+
+run 50000
+output heat
+
+# equilibrate volume with CAs restrained
+langevinPiston  on
+run 50000
+output equil_ca
+
+# equilibrate volume without restraints
+constraintScaling       0
+run 500000

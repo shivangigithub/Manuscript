@@ -1,0 +1,17 @@
+##Protein parameter generation, addition of ions and solvation
+
+tleap
+source leaprc.protein.ff14SB
+source leaprc.water.tip3p
+source leaprc.gaff
+loadAmberParams ligand.frcmod
+loadoff ligand.lib
+complex=loadpdb pdb_complex_14_noH.pdb
+savepdb complex complex.pdb                     
+saveAmberParm complex complex.prmtop complex.inpcrd
+savepdb complex complex.pdb
+solvateBox complex TIP3PBOX 10.0
+charge complex
+addions complex Na+ 6
+saveAmberParm complex complex-box.prmtop complex-box.inpcrd
+savepdb complex complex-box.pdb

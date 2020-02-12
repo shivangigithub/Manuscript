@@ -1,0 +1,54 @@
+amber  on
+parmfile        ../complex-box.prmtop
+coordinates     ../prot_eq.coor
+velocities      ../prot_eq.vel
+extendedsystem  ../prot_eq.xsc
+
+outputEnergies  500
+outputTiming    500
+outputPressure  500
+
+dcdFreq         500
+wrapAll         on
+wrapWater    on
+wrapNearest     on
+
+rigidBonds      all
+timestep        2
+nonBondedFreq   1
+fullElectFrequency 2
+stepsPerCycle   20
+
+switching       off
+cutoff          9
+pairlistdist    11
+
+cellOrigin    38.663333892822266 41.45700454711914 41.15462112426758
+
+Pme             on
+PmeGridsizeX    80
+PmeGridsizeY    85
+PmeGridsizeZ    85
+
+exclude         scaled1-4
+1-4scaling      0.833
+
+langevin                on
+langevinDamping         10
+langevinTemp            310
+langevinHydrogen        no
+
+langevinPiston          on
+langevinPistonTarget    1.01325
+langevinPistonPeriod    200
+langevinPistonDecay     100
+langevinPistonTemp      310
+
+useGroupPressure        yes     # smaller fluctuations
+useFlexibleCell         no     # allow dimensions to fluctuate independently
+useConstantRatio        no     # fix shape in x-y plane
+
+binaryoutput    off
+outputname      sim1
+
+run 20000000

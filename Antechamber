@@ -1,0 +1,14 @@
+##Ligand parameter generation
+
+antechamber -i ligand.pdb -fi pdb -o ligand.mol2 -fo mol2 -c bcc -s 2
+parmchk2 -i ligand.mol2 -f mol2 -o ligand.frcmod
+tleap
+source leaprc.gaff
+LIG=loadmol2 ligand.mol2
+list
+check LIG
+loadamberparams ligand.frcmod
+saveoff LIG ligand.lib
+savepdb LIG ligand_antechamber.pdb
+saveamberparm LIG ligand.prmtop ligand.inpcrd
+quit
