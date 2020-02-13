@@ -2,6 +2,8 @@
 
 Complex1, complex2, complex3, complex4, complex5, complex6, complex7 and co-crystal are the docking files of top 7 ligands and the experimental ligands in PDB format.
 
+The dcd files as complex1, complex2, complex3, complex4, complex5, complex6, complex7 and co-crystal are the MD trajectory files containing some representative frames obtained during simulation period.
+
 Parameters and commands used for ligand preparation are given in file named as "Antechamber".
 
 Protein preparation, addition of ions and solvation commands are given in file named as "tleap".
